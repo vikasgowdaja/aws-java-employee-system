@@ -31,26 +31,37 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody AuthRequest request) {
-        if (request.getUsername() == null || request.getPassword() == null || request.getEmail() == null) {
+        String username = request.getUsername() == null ? null : request.getUsername().trim();
+        String email = request.getEmail() == null ? null : request.getEmail().trim();
+        String displayName = request.getDisplayName() == null ? null : request.getDisplayName().trim();
+
+        if (username == null || username.isBlank() || request.getPassword() == null || request.getPassword().isBlank()
+                || email == null || email.isBlank()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("username, email and password are required");
         }
 
-        if (userRepository.existsByUsername(request.getUsername())) {
+        if (displayName == null || displayName.isBlank()) {
+            displayName = username;
+        }
+
+        if (userRepository.existsByUsername(username)) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists");
         }
 
-        if (userRepository.existsByEmail(request.getEmail())) {
+        if (userRepository.existsByEmail(email)) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already exists");
         }
 
         User saved = userRepository.save(User.builder()
-                .username(request.getUsername())
-                .email(request.getEmail())
+                .username(username)
+                .displayName(displayName)
+                .email(email)
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build());
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new AuthResponse(UUID.randomUUID().toString(), saved.getUsername(), saved.getEmail()));
+            .body(new AuthResponse(UUID.randomUUID().toString(), saved.getUsername(), saved.getDisplayName(),
+                saved.getEmail()));
     }
 
     @PostMapping("/login")
@@ -66,6 +77,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }
 
-        return ResponseEntity.ok(new AuthResponse(UUID.randomUUID().toString(), user.getUsername(), user.getEmail()));
+        return ResponseEntity.ok(new AuthResponse(UUID.randomUUID().toString(), user.getUsername(),
+            user.getDisplayName(), user.getEmail()));
     }
 }

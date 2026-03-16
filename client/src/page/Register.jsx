@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import API_BASE_URL from '../config/api';
 
 export default function Register() {
   const [username, setUsername] = useState('');
+  const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -18,8 +20,8 @@ export default function Register() {
     setSuccess('');
 
     try {
-      const result = await axios.post('http://localhost:8080/api/auth/register', { username, email, password });
-      login(result.data.token, result.data.username);
+      const result = await axios.post(`${API_BASE_URL}/auth/register`, { username, displayName, email, password });
+      login(result.data.token, result.data.username, result.data.displayName);
       setSuccess('Account created successfully');
       setTimeout(() => navigate('/'), 900);
     } catch (err) {
@@ -36,6 +38,15 @@ export default function Register() {
         <div className='mb-3'>
           <label className='form-label'>Username</label>
           <input className='form-control' value={username} onChange={(e) => setUsername(e.target.value)} required />
+        </div>
+        <div className='mb-3'>
+          <label className='form-label'>Display Name</label>
+          <input
+            className='form-control'
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
+            placeholder='How your name appears in the app'
+          />
         </div>
         <div className='mb-3'>
           <label className='form-label'>Email</label>

@@ -1,3 +1,5 @@
+version: '3.9'
+
 services:
   mysql:
     image: mysql:8.4
@@ -18,8 +20,8 @@ services:
       start_period: 20s
 
   backend:
-    image: vikasgowdaja/java-aws-emp-crud:backend
-    container_name: backend
+    image: vikasgowdaja/java-aws-emp-crud:backend-latest
+    container_name: backend_api
     restart: unless-stopped
     environment:
       DB_HOST: ${DB_HOST}
@@ -27,6 +29,7 @@ services:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS}
     depends_on:
       mysql:
         condition: service_healthy
@@ -36,9 +39,11 @@ services:
       - app-network
 
   frontend:
-    image: vikasgowdaja/java-aws-emp-crud:frontend
-    container_name: frontend
+    image: vikasgowdaja/java-aws-emp-crud:frontend-latest
+    container_name: frontend_app
     restart: unless-stopped
+    environment:
+      REACT_APP_API_BASE_URL: ${REACT_APP_API_BASE_URL}
     depends_on:
       backend:
         condition: service_started

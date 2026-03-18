@@ -27,8 +27,12 @@ public class SecurityConfig {
             .and()
             .csrf().disable()
             .authorizeHttpRequests(authorize -> authorize
+                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
-                    .requestMatchers("/api/main/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/main/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/main/**").permitAll()
+                    .requestMatchers(HttpMethod.PUT, "/api/main/**").permitAll()
+                    .requestMatchers(HttpMethod.DELETE, "/api/main/**").permitAll()
                     .anyRequest().authenticated()
             )
             .httpBasic().disable();

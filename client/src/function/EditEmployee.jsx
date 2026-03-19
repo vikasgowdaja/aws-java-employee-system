@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import API_BASE_URL from '../config/api';
 
 export default function EditEmployee() {
 
@@ -26,12 +27,12 @@ export default function EditEmployee() {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        await axios.put(`http://localhost:8080/api/main/employee/${id}`, employee);
+        await axios.put(`${API_BASE_URL}/main/employee/${id}`, employee);
         navigate("/")
     };
 
     const loadEmployee = async () => {
-        const result = await axios.get(`http://localhost:8080/api/main/employee/${id}`);
+        const result = await axios.get(`${API_BASE_URL}/main/employee/${id}`);
         setEmployee(result.data);
     };
 

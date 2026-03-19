@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import API_BASE_URL from '../config/api';
 
 export default function ViewEmployee() {
 
@@ -17,7 +18,7 @@ export default function ViewEmployee() {
     }, []);
 
     const loadEmployee = async () => {
-        const result = await axios.get(`http://localhost:8080/api/main/employee/${id}`);
+        const result = await axios.get(`${API_BASE_URL}/main/employee/${id}`);
         setEmployee(result.data);
     }
 

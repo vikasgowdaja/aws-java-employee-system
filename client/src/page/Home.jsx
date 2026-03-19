@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import API_BASE_URL from '../config/api';
 
 export default function Home() {
     const [employee, setEmployee] = useState([]);
@@ -21,7 +22,7 @@ export default function Home() {
     const loadEmployee = async () => {
         try {
             setLoading(true);
-            const result = await axios.get('http://localhost:8080/api/main/employee', {
+            const result = await axios.get(`${API_BASE_URL}/main/employee`, {
                 headers: authToken ? { Authorization: `Bearer ${authToken}` } : {}
             });
             setEmployee(result.data);
@@ -34,7 +35,7 @@ export default function Home() {
 
     const deleteEmployee = async (id) => {
         try {
-            await axios.delete(`http://localhost:8080/api/main/employee/${id}`, {
+            await axios.delete(`${API_BASE_URL}/main/employee/${id}`, {
                 headers: authToken ? { Authorization: `Bearer ${authToken}` } : {}
             });
             loadEmployee();

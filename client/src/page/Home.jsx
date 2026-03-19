@@ -8,7 +8,7 @@ export default function Home() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const navigate = useNavigate();
-    const { isAuthenticated, authToken, username } = useAuth();
+    const { isAuthenticated, authToken, displayName } = useAuth();
 
     useEffect(() => {
         if (!isAuthenticated) {
@@ -48,7 +48,7 @@ export default function Home() {
             <div className='d-flex justify-content-between align-items-center mb-4'>
                 <div>
                     <h1 className='display-6 text-muted'>Employee Directory</h1>
-                    <p className='welcome-line mb-0'>Welcome, <span className='welcome-name'>{username || 'Guest'}</span></p>
+                    <p className='welcome-line mb-0'>Welcome, <span className='welcome-name'>{displayName || 'Guest'}</span></p>
                 </div>
                 <Link to='/addEmployee' className='btn btn-success'>Add Employee</Link>
             </div>
